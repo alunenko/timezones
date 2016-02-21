@@ -1,0 +1,49 @@
+doctype html
+html(lang="en" ng-app="app")
+  head
+    meta(charset="UTF-8")
+    title Google map
+    link(href='node_modules/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
+    link(href='css.min.css', rel='stylesheet')
+
+  body
+    script(src="https://maps.googleapis.com/maps/api/js?v=3.exp" type="text/javascript")
+    script(src="https://cdn.timezonedb.com/js/timezonedb.min.js")
+    script(src="node_modules/angular/angular.min.js")
+    script(src="all.min.js")
+
+    .row#height100(ng-controller="MapController")
+      .col-md-6(google-map)
+      .col-md-6
+        table.table.table-hover
+          thead
+            tr
+              th(ng-repeat="(key, title) in head" ng-click="columnSort(key)")
+                span {{ title }}
+                span.glyphicon(
+                  aria-hidden="true"
+                  ng-show="sort.predicate === key"
+                  ng-class="{true:'glyphicon-sort-by-alphabet-alt', false:'glyphicon-sort-by-alphabet'}[sort.reverse]"
+                )
+            tr
+              th
+                input.form-control(type="search" ng-model="search.index")
+              th
+                input.form-control(type="search" ng-model="search.dataZoneName")
+              th 
+                input.form-control(type="search" ng-model="search.lat")
+              th
+                input.form-control(type="search" ng-model="search.lng")
+              th
+                input.form-control(type="search" ng-model="search.datetimeFormat")
+              th
+          tbody
+            tr(ng-repeat="field in pointsStore | filter: search | orderBy:sort.predicate:sort.reverse")
+              td {{ field.index }}
+              td {{ field.dataZoneName }}
+              td {{ field.lat }}
+              td {{ field.lng }}
+              td {{ field.datetimeFormat }}
+              td(style="text-align: center")
+                button.btn.btn-danger(type="button" ng-click="remove(field.index)")
+                  span.glyphicon.glyphicon-remove(aria-hidden="true")
